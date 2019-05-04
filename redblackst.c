@@ -289,9 +289,9 @@ void put (RedBlackST st, const void *key, size_t sizeKey, const void *val, size_
             return;
         }
 
-        void *copyKey = emalloc (sizeKey);
+        void *copyKey = emalloc (char * sizeKey);
         copyKey = key;
-        void *copyVal = emalloc (sizeVal);
+        void *copyVal = emalloc (char * sizeVal);
         copyVal = val;
 
         st->root = auxPut (st, st->root, copyKey, copyVal);
