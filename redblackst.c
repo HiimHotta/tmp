@@ -77,32 +77,6 @@ struct redBlackST {
  *
  */
 
-/***************************************************************************
-*  Red-black tree helper functions.
-***************************************************************************/
-
-static Bool isRed (Node *node);
-
-// make a left-leaning link lean to the right
-static Node *rotateRight (Node *h);
-
-// make a right-leaning link lean to the left
-static Node *rotateLeft (Node *h);
-
-// flip the colors of a node and its two children
-static void flipColors (Node *h);
-
-// Assuming that h is red and both h.left and h.left.left
-// are black, make h.left or one of its children red.
-static Node *moveRedLeft (Node *h);
-
-    // Assuming that h is red and both h.right and h.right.left
-    // are black, make h.right or one of its children red.
-static Node *moveRedRight(Node *h);
-
-// restore red-black tree invariant
-static Node *balance(Node *h);
-
 /*---------------------------------------------------------------*/
 static Bool isBST(RedBlackST st);
 
@@ -142,6 +116,91 @@ RedBlackST initST (int (*compar) (const void *key1, const void *key2)) {
     return st;
 }
 
+/***************************************************************************
+*  Red-black tree helper functions.
+***************************************************************************/
+
+// is node x red; false if x is null
+static Bool isRed (Node *node) {
+    if (node == NULL)
+        return FALSE;
+    return node->color == RED;
+}
+
+// make a left-leaning link lean to the right
+static Node *rotateRight(Node *h) {
+    // assert (h != null) && isRed(h->left);
+    Node *x = h->left;
+    h->left = x->right;
+    x->right = h;
+    x->color = x->right->color;
+    x->right->color = RED;
+    x->size = h->size;
+    h->size = sizeNode (h->left) + sizeNode (h->right) + 1;
+    return x;
+}
+
+// make a right-leaning link lean to the left
+static Node *rotateLeft(Node *h) {
+    // assert (h != null) && isRed(h->right);
+    Node *x = h->right;
+    h->right = x->left;
+    x->left = h;
+    x->color = x->left->color;
+    x->left->color = RED;
+    x->size = h->size;
+    h->size = sizeNode (h->left) + sizeNode (h->right) + 1;
+    return x;
+}
+
+// flip the colors of a node and its two children
+static void flipColors (Node *h) {
+    // h must have opposite color of its two children
+    // assert (h != null) && (h->left != null) && (h->right != null);
+    // assert (!isRed(h) &&  isRed(h->left) &&  isRed(h->right))
+    //    || (isRed(h)  && !isRed(h->left) && !isRed(h->right));
+    h->color = !h->color;
+    h->left->color = !h->left->color;
+    h->right->color = !h->right->color;
+}
+
+// Assuming that h is red and both h->left and h->left->left
+// are black, make h->left or one of its children red->
+static Node *moveRedLeft (Node *h) {
+    // assert (h != null);
+    // assert isRed(h) && !isRed(h->left) && !isRed(h->left->left);
+    flipColors (h);
+    if (isRed (h->right->left)) { 
+        h->right = rotateRight (h->right);
+        h = rotateLeft (h);
+        flipColors (h);
+    }
+    return h;
+}
+
+    // Assuming that h is red and both h->right and h->right->left
+    // are black, make h->right or one of its children red->
+static Node *moveRedRight(Node *h) {
+    // assert (h != null);
+    // assert isRed(h) && !isRed(h->right) && !isRed(h->right->left);
+    flipColors (h);
+    if (isRed (h->left->left)) { 
+        h = rotateRight (h);
+        flipColors (h);
+    }
+    return h;
+}
+
+// restore red-black tree invariant
+static Node *balance(Node *h) {
+    // assert (h != null);
+    if (isRed (h->right))                         h = rotateLeft (h);
+    if (isRed (h->left) && isRed (h->left->left)) h = rotateRight (h);
+    if (isRed (h->left) && isRed (h->right))      flipColors (h);
+
+    h->size = sizeNode (h->left) + sizeNode (h->right) + 1;
+    return h;
+}
 
 /*-----------------------------------------------------------*/
 /* 
@@ -482,98 +541,6 @@ Bool check (RedBlackST st) {
     if (!isBalanced (st))       ERROR("check(): not balanced");
     return isBST (st) && isSizeConsistent (st) && isRankConsistent (st) && is23 (st) && isBalanced (st);
 }
-
-/***************************************************************************
-*  Red-black tree helper functions.
-***************************************************************************/
-
-// is node x red; false if x is null
-static Bool isRed (Node *node) {
-    if (node == NULL)
-        return FALSE;
-    return node->color == RED;
-}
-
-// make a left-leaning link lean to the right
-static Node *rotateRight(Node *h) {
-    // assert (h != null) && isRed(h->left);
-    Node *x = h->left;
-    h->left = x->right;
-    x->right = h;
-    x->color = x->right->color;
-    x->right->color = RED;
-    x->size = h->size;
-    h->size = sizeNode (h->left) + sizeNode (h->right) + 1;
-    return x;
-}
-
-// make a right-leaning link lean to the left
-static Node *rotateLeft(Node *h) {
-    // assert (h != null) && isRed(h->right);
-    Node *x = h->right;
-    h->right = x->left;
-    x->left = h;
-    x->color = x->left->color;
-    x->left->color = RED;
-    x->size = h->size;
-    h->size = sizeNode (h->left) + sizeNode (h->right) + 1;
-    return x;
-}
-
-// flip the colors of a node and its two children
-static void flipColors (Node *h) {
-    // h must have opposite color of its two children
-    // assert (h != null) && (h->left != null) && (h->right != null);
-    // assert (!isRed(h) &&  isRed(h->left) &&  isRed(h->right))
-    //    || (isRed(h)  && !isRed(h->left) && !isRed(h->right));
-    h->color = !h->color;
-    h->left->color = !h->left->color;
-    h->right->color = !h->right->color;
-}
-
-// Assuming that h is red and both h->left and h->left->left
-// are black, make h->left or one of its children red->
-static Node *moveRedLeft (Node *h) {
-    // assert (h != null);
-    // assert isRed(h) && !isRed(h->left) && !isRed(h->left->left);
-    flipColors (h);
-    if (isRed (h->right->left)) { 
-        h->right = rotateRight (h->right);
-        h = rotateLeft (h);
-        flipColors (h);
-    }
-    return h;
-}
-
-    // Assuming that h is red and both h->right and h->right->left
-    // are black, make h->right or one of its children red->
-static Node *moveRedRight(Node *h) {
-    // assert (h != null);
-    // assert isRed(h) && !isRed(h->right) && !isRed(h->right->left);
-    flipColors (h);
-    if (isRed (h->left->left)) { 
-        h = rotateRight (h);
-        flipColors (h);
-    }
-    return h;
-}
-
-// restore red-black tree invariant
-static Node *balance(Node *h) {
-    // assert (h != null);
-    if (isRed (h->right))                         h = rotateLeft (h);
-    if (isRed (h->left) && isRed (h->left->left)) h = rotateRight (h);
-    if (isRed (h->left) && isRed (h->right))      flipColors (h);
-
-    h->size = sizeNode (h->left) + sizeNode (h->right) + 1;
-    return h;
-}
-
-
-
-
-
-
 
 
 /* 
