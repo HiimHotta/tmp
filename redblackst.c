@@ -263,6 +263,8 @@ void freeST (RedBlackST st) {
 Node *auxPut (RedBlackST st, Node *h, void *key, void *val) { 
     if (h == NULL) 
         return newNode (key, val, RED, 1);
+
+    printf(" %s\n", h->key);
     
     int cmp = strCmp (h->key, key);
     if      (cmp < 0) h->left  = auxPut (st, h->left,  key, val); 
@@ -288,11 +290,11 @@ void put (RedBlackST st, const void *key, size_t sizeKey, const void *val, size_
             //delete (st, key);
             return;
         }
-        void *copyKey = malloc (sizeKey);
-        memcpy(copyKey, key, sizeKey);
+        void *copyKey = emalloc (sizeKey);
+        memcpy (copyKey, key, sizeKey);
 
-        void *copyVal = malloc (sizeVal);
-        memcpy(copyVal, val, sizeVal);
+        void *copyVal = emalloc (sizeVal);
+        memcpy (copyVal, val, sizeVal);
 
         st->root = auxPut (st, st->root, copyKey, copyVal);
         st->root->color = BLACK;
