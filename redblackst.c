@@ -281,25 +281,26 @@ Node *auxPut (RedBlackST st, Node *h, void *key, void *val) {
 }    
 
 void put (RedBlackST st, const void *key, size_t sizeKey, const void *val, size_t sizeVal) {
-        if (key == NULL) {
-            ERROR ("KEY EH NULL");
-            return;
-        }
-
-        if (val == NULL) {
-            //delete (st, key);
-            return;
-        }
-        void *copyKey = emalloc (sizeKey);
-        memcpy (copyKey, key, sizeKey);
-
-        void *copyVal = emalloc (sizeVal);
-        memcpy (copyVal, val, sizeVal);
-
-        st->root = auxPut (st, st->root, copyKey, copyVal);
-        st->root->color = BLACK;
-        // assert check();
+    printf("\n\nPUT %s\n\n", val);
+    if (key == NULL) {
+        ERROR ("KEY EH NULL");
+        return;
     }
+
+    if (val == NULL) {
+            //delete (st, key);
+        return;
+    }
+    void *copyKey = emalloc (sizeKey);
+    memcpy (copyKey, key, sizeKey);
+
+    void *copyVal = emalloc (sizeVal);
+    memcpy (copyVal, val, sizeVal);
+
+    st->root = auxPut (st, st->root, copyKey, copyVal);
+    st->root->color = BLACK;
+        // assert check();
+}
 
 /*-----------------------------------------------------------*/
 /*
