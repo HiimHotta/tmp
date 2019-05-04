@@ -120,6 +120,27 @@ RedBlackST initST (int (*compar) (const void *key1, const void *key2)) {
 *  Red-black tree helper functions.
 ***************************************************************************/
 
+/*-----------------------------------------------------------*/
+/* 
+ *  SIZE(ST)
+ *
+ *  RECEBE uma tabela de sÃ­mbolos ST.
+ * 
+ *  RETORNA o nÃºmero de itens (= pares chave-valor) na ST.
+ *
+ */
+int size (RedBlackST st) {
+    if (st->root == NULL)
+        return 0;
+    return st->root->size;
+}
+
+int sizeNode (Node *node) {
+    if (node == NULL)
+        return 0;
+    return node->size;
+}
+
 // is node x red; false if x is null
 static Bool isRed (Node *node) {
     if (node == NULL)
@@ -200,27 +221,6 @@ static Node *balance(Node *h) {
 
     h->size = sizeNode (h->left) + sizeNode (h->right) + 1;
     return h;
-}
-
-/*-----------------------------------------------------------*/
-/* 
- *  SIZE(ST)
- *
- *  RECEBE uma tabela de sÃ­mbolos ST.
- * 
- *  RETORNA o nÃºmero de itens (= pares chave-valor) na ST.
- *
- */
-int size (RedBlackST st) {
-    if (st->root == NULL)
-        return 0;
-    return st->root->size;
-}
-
-int sizeNode (Node *node) {
-    if (node == NULL)
-        return 0;
-    return node->size;
 }
 
 
