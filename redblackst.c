@@ -281,7 +281,7 @@ Node *auxPut (RedBlackST st, Node *h, void *key, void *val) {
 }    
 
 void put (RedBlackST st, const void *key, size_t sizeKey, const void *val, size_t sizeVal) {
-    printf("\n\nPUT %s\n\n", val);
+    printf("\n\nPUT %s\n\n", key);
     if (key == NULL) {
         ERROR ("KEY EH NULL");
         return;
@@ -291,10 +291,10 @@ void put (RedBlackST st, const void *key, size_t sizeKey, const void *val, size_
             //delete (st, key);
         return;
     }
-    void *copyKey = emalloc (sizeKey);
+    void *copyKey = emalloc (sizeKey + 10);
     memcpy (copyKey, key, sizeKey);
 
-    void *copyVal = emalloc (sizeVal);
+    void *copyVal = emalloc (sizeVal + 10);
     memcpy (copyVal, val, sizeVal);
 
     st->root = auxPut (st, st->root, copyKey, copyVal);
