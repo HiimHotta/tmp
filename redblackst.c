@@ -44,8 +44,8 @@ struct node {
 //"construtor"
 Node *newNode (const void *key, const void *val, Node *left, Node *right, Bool color, int size) {
     Node *tmp = emalloc (sizeof (Node));
-    tmp->key = key;
-    tmp->val = val;
+    tmp->key = (void *) key;
+    tmp->val = (void *) val;
     tmp->left = left;
     tmp->right = right;
     tmp->color = color;
@@ -270,7 +270,7 @@ Node *auxPut (RedBlackST st, Node *h, const void *key, const void *val) {
     if (cmp != 0)     h->size++;
     if      (cmp < 0) h->left  = auxPut (st, h->left,  key, val); 
     else if (cmp > 0) h->right = auxPut (st, h->right, key, val); 
-    else              h->val   = val;
+    else              h->val   = (void *) val;
 
         // fix-up any right-leaning links
     if (isRed (h->right) && !isRed (h->left))      h = rotateLeft  (h);
@@ -462,7 +462,10 @@ void *select (RedBlackST st, int k) {
  *  Se ST estÃ¡ vazia, faz nada.
  *
  */
-void *deleteMin (RedBlackST st) {
+void deleteMin (RedBlackST st) {
+    if (st->root == NULL)
+        return;
+
 }
 
 
