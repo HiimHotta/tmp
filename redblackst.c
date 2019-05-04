@@ -61,7 +61,7 @@ Node *newNode (const void *key, const void *val, Node *left, Node *right, Bool c
  */
 struct redBlackST {
     Node *root;
-    int (*compareTo)(const void *key1, const void *key2)
+    int (*compareTo)(const void *key1, const void *key2);
 };
 
 /*------------------------------------------------------------*/
@@ -94,14 +94,14 @@ static void flipColors (Node *h);
 
 // Assuming that h is red and both h.left and h.left.left
 // are black, make h.left or one of its children red.
-static Node moveRedLeft (Node *h);
+static Node *moveRedLeft (Node *h);
 
     // Assuming that h is red and both h.right and h.right.left
     // are black, make h.right or one of its children red.
-static Node moveRedRight(Node *h);
+static Node *moveRedRight(Node *h);
 
 // restore red-black tree invariant
-static Node balance(Node *h);
+static Node *balance(Node *h);
 
 /*---------------------------------------------------------------*/
 static Bool isBST(RedBlackST st);
@@ -233,7 +233,7 @@ void put (RedBlackST st, const void *key, size_t sizeKey, const void *val, size_
             return;
         }
 
-        st->root = auxPut (st->root, key, val);
+        st->root = auxPut (st, st->root, key, val);
         st->root->color = BLACK;
         // assert check();
     }
@@ -300,15 +300,15 @@ Node* deleteMin(Node *h) {
 
 
 void delete (RedBlackST st, const void *key) {
-    if (isEmpty ())
+    if (isEmpty (st))
         ERROR (BST underflow);
 
         // if both children of root are black, set root to red
     if (!isRed (st->root->left) && !isRed (st->root->right))
         st->root->color = RED;
 
-    root = deleteMin (st->root);
-    if (!isEmpty ())
+    st->root = deleteMin (st->root);
+    if (!isEmpty (st))
         st->root->color = BLACK;
         // assert check();
 }
