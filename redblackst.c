@@ -287,14 +287,14 @@ Bool contains (RedBlackST st, const void *key) {
 
 
     // delete the key-value pair with the minimum key rooted at h
-Node* deleteMin(Node *h) { 
+Node* deleteMinNode (Node *h) { 
     if (h->left == NULL)
         return NULL;
 
     if (!isRed (h->left) && !isRed (h->left->left))
         h = moveRedLeft (h);
 
-    h->left = deleteMin (h->left);
+    h->left = deleteMinNode (h->left);
     return balance (h);
 }
 
@@ -307,7 +307,7 @@ void delete (RedBlackST st, const void *key) {
     if (!isRed (st->root->left) && !isRed (st->root->right))
         st->root->color = RED;
 
-    st->root = deleteMin (st->root);
+    st->root = deleteMinNode (st->root);
     if (!isEmpty (st))
         st->root->color = BLACK;
         // assert check();
@@ -403,7 +403,7 @@ void *select (RedBlackST st, int k) {
  *  Se ST estÃ¡ vazia, faz nada.
  *
  */
-void deleteMin (RedBlackST st) {
+void *deleteMin (RedBlackST st) {
 }
 
 
@@ -490,7 +490,7 @@ Bool check (RedBlackST st) {
 // is node x red; false if x is null
 static Bool isRed (Node *node) {
     if (node == NULL)
-        return false;
+        return FALSE;
     return node->color == RED;
 }
 
