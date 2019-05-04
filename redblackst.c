@@ -288,11 +288,11 @@ void put (RedBlackST st, const void *key, size_t sizeKey, const void *val, size_
             //delete (st, key);
             return;
         }
+        void *copyKey;
+        memcpy(copyKey, key, sizeKey);
 
-        void *copyKey = emalloc (sizeKey * sizeof (char));
-        copyKey = key;
-        void *copyVal = emalloc (sizeVal * sizeof (char));
-        copyVal = val;
+        void *copyVal;
+        memcpy(copyVal, val, sizeVal);
 
         st->root = auxPut (st, st->root, copyKey, copyVal);
         st->root->color = BLACK;
