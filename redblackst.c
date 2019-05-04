@@ -42,7 +42,7 @@ struct node {
 };
 
 //"construtor"
-Node *newNode (void *key, void *val, Node *left, Node *right, Bool color, int size) {
+Node *newNode (const void *key, const void *val, Node *left, Node *right, Bool color, int size) {
     Node *tmp = emalloc (sizeof (Node));
     tmp->key = key;
     tmp->val = val;
@@ -135,11 +135,35 @@ static Bool isBalanced(RedBlackST st);
  *  chaves.
  * 
  */
-RedBlackST initST (int (*compar)(const void *key1, const void *key2)) {
+RedBlackST initST (int (*compar) (const void *key1, const void *key2)) {
     RedBlackST st = emalloc (sizeof (RedBlackST));
-    st.root = NULL;
-    st.compareTo = compar;
+    st->root = NULL;
+    st->compareTo = compar;
+    return st;
 }
+
+
+/*-----------------------------------------------------------*/
+/* 
+ *  SIZE(ST)
+ *
+ *  RECEBE uma tabela de sÃ­mbolos ST.
+ * 
+ *  RETORNA o nÃºmero de itens (= pares chave-valor) na ST.
+ *
+ */
+int size (RedBlackST st) {
+    if (st->root == NULL)
+        return 0;
+    return st->root->size;
+}
+
+int sizeNode (Node *node) {
+    if (node == NULL)
+        return 0;
+    return node->size;
+}
+
 
 /*-----------------------------------------------------------*/
 /*
@@ -288,28 +312,6 @@ void delete (RedBlackST st, const void *key) {
         st->root->color = BLACK;
         // assert check();
 }
-
-/*-----------------------------------------------------------*/
-/* 
- *  SIZE(ST)
- *
- *  RECEBE uma tabela de sÃ­mbolos ST.
- * 
- *  RETORNA o nÃºmero de itens (= pares chave-valor) na ST.
- *
- */
-int size (RedBlackST st) {
-    if (st->root == NULL)
-        return 0;
-    return st->root->size;
-}
-
-int sizeNode (Node *node) {
-    if (node == NULL)
-        return 0;
-    return node->size;
-}
-
 
 /*-----------------------------------------------------------*/
 /* 
@@ -501,7 +503,7 @@ static Node *rotateRight(Node *h) {
     x->color = x->right->color;
     x->right->color = RED;
     x->size = h->size;
-    h->size = size (h->left) + size (h->right) + 1;
+    h->size = sizeNode (h->left) + sizeNode (h->right) + 1;
     return x;
 }
 
@@ -514,7 +516,7 @@ static Node *rotateLeft(Node *h) {
     x->color = x->left->color;
     x->left->color = RED;
     x->size = h->size;
-    h->size = size (h->left) + size (h->right) + 1;
+    h->size = sizeNode (h->left) + sizeNode (h->right) + 1;
     return x;
 }
 
@@ -563,7 +565,7 @@ static Node *balance(Node *h) {
     if (isRed (h->left) && isRed (h->left->left)) h = rotateRight (h);
     if (isRed (h->left) && isRed (h->right))      flipColors (h);
 
-    h->size = size (h->left) + size (h->right) + 1;
+    h->size = sizeNode (h->left) + sizeNode (h->right) + 1;
     return h;
 }
 
