@@ -42,12 +42,10 @@ struct node {
 };
 
 //"construtor"
-Node *newNode (const void *key, const void *val, Node *left, Node *right, Bool color, int size) {
+Node *newNode (const void *key, const void *val, Bool color, int size) {
     Node *tmp = emalloc (sizeof (Node));
     tmp->key = (void *) key;
     tmp->val = (void *) val;
-    tmp->left = left;
-    tmp->right = right;
     tmp->color = color;
     tmp->size = size;
     return tmp;
@@ -61,7 +59,7 @@ Node *newNode (const void *key, const void *val, Node *left, Node *right, Bool c
  */
 struct redBlackST {
     Node *root;
-    int (*compareTo)(const void *key1, const void *key2);
+    int (*compareTo) (const void *key1, const void *key2);
 };
 
 /*------------------------------------------------------------*/
@@ -264,7 +262,7 @@ void freeST (RedBlackST st) {
 // insert the key-value pair in the subtree rooted at h
 Node *auxPut (RedBlackST st, Node *h, const void *key, const void *val) { 
     if (h == NULL) 
-        return newNode (key, val, NULL, NULL, BLACK, 1);
+        return newNode (key, val, BLACK, 1);
     
     int cmp = st->compareTo (h->key, key);
     if (cmp != 0)     h->size++;
