@@ -42,10 +42,10 @@ struct node {
 };
 
 //"construtor"
-Node *newNode (const void *key, const void *val, Bool color, int size) {
+Node *newNode (void *key, void *val, Bool color, int size) {
     Node *tmp = emalloc (sizeof (Node));
-    tmp->key = (void *) key;
-    tmp->val = (void *) val;
+    tmp->key = key;
+    tmp->val = val;
     tmp->color = color;
     tmp->size = size;
     return tmp;
@@ -108,7 +108,7 @@ static Bool isBalanced(RedBlackST st);
  * 
  */
 RedBlackST initST (int (*compar) (const void *key1, const void *key2)) {
-    RedBlackST st = emalloc (sizeof (RedBlackST));
+    RedBlackST st = emalloc (sizeof (struct redBlackST));
     st->root = NULL;
     st->compareTo = compar;
     return st;
@@ -147,7 +147,7 @@ static Bool isRed (Node *node) {
 }
 
 // make a left-leaning link lean to the right
-static Node *rotateRight(Node *h) {
+static Node *rotateRight (Node *h) {
     // assert (h != null) && isRed(h->left);
     Node *x = h->left;
     h->left = x->right;
@@ -160,7 +160,7 @@ static Node *rotateRight(Node *h) {
 }
 
 // make a right-leaning link lean to the left
-static Node *rotateLeft(Node *h) {
+static Node *rotateLeft (Node *h) {
     // assert (h != null) && isRed(h->right);
     Node *x = h->right;
     h->right = x->left;
@@ -260,9 +260,9 @@ void freeST (RedBlackST st) {
  */
 
 // insert the key-value pair in the subtree rooted at h
-Node *auxPut (RedBlackST st, Node *h, const void *key, const void *val) { 
+Node *auxPut (RedBlackST st, Node *h, void *key, void *val) { 
     if (h == NULL) 
-        return newNode (key, val, BLACK, 1);
+        return newNode (key, val, RED, 1);
     
     int cmp = strCmp (h->key, key);
     if      (cmp < 0) h->left  = auxPut (st, h->left,  key, val); 
@@ -280,7 +280,7 @@ Node *auxPut (RedBlackST st, Node *h, const void *key, const void *val) {
 
 void put (RedBlackST st, const void *key, size_t sizeKey, const void *val, size_t sizeVal) {
         if (key == NULL) {
-            ERROR (KEY EH NULL);
+            ERROR ("KEY EH NULL");
             return;
         }
 
@@ -289,7 +289,10 @@ void put (RedBlackST st, const void *key, size_t sizeKey, const void *val, size_
             return;
         }
 
-        st->root = auxPut (st, st->root, key, val);
+        void *copyKey = emalloc (sizeKey * sizeof (void));
+        void *copyVal = emalloc (sizeVal * sizeof (void));
+
+        st->root = auxPut (st, st->root, copyKey, copyVal);
         st->root->color = BLACK;
         // assert check();
     }
