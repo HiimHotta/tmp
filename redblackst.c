@@ -271,13 +271,13 @@ Node *auxPut (RedBlackST st, Node *h, const void *key, const void *val) {
     if      (cmp < 0) h->left  = auxPut (st, h->left,  key, val); 
     else if (cmp > 0) h->right = auxPut (st, h->right, key, val); 
     else              h->val   = (void *) val;
-
+/*
         // fix-up any right-leaning links
     if (isRed (h->right) && !isRed (h->left))      h = rotateLeft  (h);
     if (isRed (h->left)  &&  isRed (h->left->left)) h = rotateRight (h);
     if (isRed (h->left)  &&  isRed (h->right))     flipColors (h);
     h->size = sizeNode (h->left) + sizeNode (h->right) + 1;
-
+*/
     return h;
 }    
 
@@ -288,7 +288,7 @@ void put (RedBlackST st, const void *key, size_t sizeKey, const void *val, size_
         }
 
         if (val == NULL) {
-            delete (st, key);
+            //delete (st, key);
             return;
         }
 
