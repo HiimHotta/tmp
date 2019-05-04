@@ -40,30 +40,35 @@
 /*
  *  P R O T Ã“ T I P O S
  */
-static void mostreUso (char *nomePrograma);
+static void 
+mostreUso (char *nomePrograma);
 
-RedBlackST crieST(FILE *arqTexto);
+RedBlackST
+crieST(FILE *arqTexto);
 
-void testeOperacoesST(RedBlackST st);
+void 
+testeOperacoesST(RedBlackST st);
 
-void testeOperacoes(RedBlackST st);
+void 
+testeOperacoes(RedBlackST st);
 
-int visit(const void *key, const void *val);
+int
+visit(const void *key, const void *val);
 
 /*---------------------------------------------------------------*/
 /* 
  *  M A I N 
  */
-int main(int argc, char *argv[]) {
+int 
+main(int argc, char *argv[])
+{
     FILE *         arqTexto = NULL;
     RedBlackST st       = NULL;
 
-    if (argc < 2) 
-        mostreUso(argv[0]);
+    if (argc < 2) mostreUso(argv[0]);
 
     /* abra arquivo com texto */
     arqTexto = fopen(argv[1], "r");
-
     if (arqTexto == NULL) {
         printf("ERRO: arquivo '%s' nao pode ser aberto.\n", argv[1]);
         exit(EXIT_FAILURE);
@@ -96,7 +101,9 @@ int main(int argc, char *argv[]) {
  *
  *  String e Integer estÃ£o definidos em util.h.
  */
-RedBlackST crieST(FILE *arqTexto) {
+RedBlackST
+crieST(FILE *arqTexto)
+{
     RedBlackST st = NULL;
     String linha      = NULL;
     /* usadas para medir tempo de processamento */
@@ -164,7 +171,9 @@ RedBlackST crieST(FILE *arqTexto) {
  *  A funÃ§Ã£o supÃµe que as chaves sÃ£o do tipo String e os
  *  valores sÃ£o do tipo Integer (ver util.h).
  */
-void testeOperacoes(RedBlackST st) {
+void 
+testeOperacoes(RedBlackST st)
+{
     String linha    = NULL;
     
     /* mostre uso */
@@ -282,7 +291,9 @@ void testeOperacoes(RedBlackST st) {
  *  I M P L E M E N T A Ã‡ Ãƒ O   D A S   F U N Ã‡ Ã• E S   DA  
  *                     A U X I L I A R E S 
  */
-static void mostreUso (char *nomePrograma) {
+static void 
+mostreUso (char *nomePrograma)
+{
     fprintf(stderr,"%s: Uso \n"
 	    "prompt> %s nome-arquivo\n"
 	    "    nome-arquivo = nome do arquivo com o texto\n"
