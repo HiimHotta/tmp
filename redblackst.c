@@ -288,10 +288,10 @@ void put (RedBlackST st, const void *key, size_t sizeKey, const void *val, size_
             //delete (st, key);
             return;
         }
-        void *copyKey;
+        void *copyKey = malloc (sizeKey);
         memcpy(copyKey, key, sizeKey);
 
-        void *copyVal;
+        void *copyVal = malloc (sizeVal);
         memcpy(copyVal, val, sizeVal);
 
         st->root = auxPut (st, st->root, copyKey, copyVal);
