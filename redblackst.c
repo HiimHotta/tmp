@@ -46,8 +46,10 @@ Node *newNode (void *key, void *val, Bool color) {
     Node *tmp = emalloc (sizeof (Node));
     tmp->key = key;
     tmp->val = val;
+    tmp->left = NULL;
+    tmp->right = NULL;
     tmp->color = color;
-    tmp->size = size;
+    tmp->size = 1;
     return tmp;
 }
 
