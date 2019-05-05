@@ -42,7 +42,7 @@ struct node {
 };
 
 //"construtor"
-Node *newNode (void *key, void *val, Bool color, int size) {
+Node *newNode (void *key, void *val, Bool color) {
     Node *tmp = emalloc (sizeof (Node));
     tmp->key = key;
     tmp->val = val;
@@ -264,6 +264,11 @@ Node *auxPut (RedBlackST st, Node *h, void *key, void *val) {
     if (h == NULL) 
         return newNode (key, val, RED);
 
+    if (h->key == NULL) {
+        ERROR (AAAAHHH, H->KEY NULL);
+    }
+
+
     printf(" %s\n", h->key);
     
     int cmp = st->compareTo (h->key, key);
@@ -322,7 +327,7 @@ void *get (RedBlackST st, const void *key) {
         if      (cmp < 0) n = n->left;
         else if (cmp > 0) n = n->right;
         else              return n->val;
-    }
+    } 
     return NULL;
 }
 
