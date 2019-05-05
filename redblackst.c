@@ -276,8 +276,8 @@ Node *auxPut (RedBlackST st, Node *h, const void *key, size_t sizeKey, const voi
     printf(" %s\n", h->key);
     
     int cmp = st->compareTo (h->key, key);
-    if      (cmp < 0) h->left  = auxPut (st, h->left,  key, val); 
-    else if (cmp > 0) h->right = auxPut (st, h->right, key, val); 
+    if      (cmp < 0) h->left  = auxPut (st, h->left,  key, sizeKey, val, sizeVal); 
+    else if (cmp > 0) h->right = auxPut (st, h->right, key, sizeKey, val, sizeVal); 
     else              printf("hmmm\n"); //h->val   = val;
 /*
         // fix-up any right-leaning links
@@ -354,7 +354,7 @@ Bool contains (RedBlackST st, const void *key) {
  */
 
 // delete the key-value pair with the given key rooted at h
-Node deleteNode (RedBlackST st, Node h, Key key) { 
+Node deleteNode (RedBlackST st, Node *h, const void *key) { 
     // assert get(h, key) != NULL;
     if (st->compareTo (h->key, key ) < 0)  {
         if (!isRed (h->left) && !isRed (h->left->left))
