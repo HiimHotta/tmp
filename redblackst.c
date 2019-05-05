@@ -46,7 +46,7 @@ Node *newNode (const void *key, size_t sizeKey, const void *val, size_t sizeVal,
     Node *tmp = emalloc (sizeof (Node));
     tmp->key = emalloc (sizeKey);
     memcpy (tmp->key, key, sizeKey);
-    tmp->val = = emalloc (sizeVal);
+    tmp->val = emalloc (sizeVal);
     memcpy (tmp->val, val, sizeVal);
     tmp->left = NULL;
     tmp->right = NULL;
@@ -226,6 +226,44 @@ static Node *balance(Node *h) {
 }
 
 
+
+/*------------------------------------------------------------*/
+/*
+ * OPERAÃ‡Ã•ES PARA TABELAS DE SÃMBOLOS ORDENADAS: 
+ * min(), max(), rank(), select(), deleteMin() e deleteMax().
+ */
+
+/*-----------------------------------------------------------*/
+/*
+ *  MIN(ST)
+ * 
+ *  RECEBE uma tabela de sÃ­mbolos ST e RETORNA uma cÃ³pia/clone
+ *  da menor chave na tabela.
+ *
+ *  Se ST estÃ¡ vazia RETORNA NULL.
+ *
+ */
+void *min (RedBlackST st) {
+
+    return NULL;
+}
+
+void *minNode (Node *node) {
+    return NULL;
+}
+
+// delete the key-value pair with the minimum key rooted at h
+Node* deleteMinNode (Node *h) { 
+    if (h->left == NULL)
+        return NULL;
+
+    if (!isRed (h->left) && !isRed (h->left->left))
+        h = moveRedLeft (h);
+
+    h->left = deleteMinNode (h->left);
+    return balance (h);
+}
+
 /*-----------------------------------------------------------*/
 /*
  *  freeST(ST)
@@ -359,7 +397,7 @@ Node deleteNode (RedBlackST st, Node *h, const void *key) {
     if (st->compareTo (h->key, key ) < 0)  {
         if (!isRed (h->left) && !isRed (h->left->left))
             h = moveRedLeft (h);
-        h->left = delete (h->left, key);
+        h->left = deleteNode (st, h->left, key);
     }
 
     else {
@@ -370,14 +408,14 @@ Node deleteNode (RedBlackST st, Node *h, const void *key) {
         if (!isRed (h->right) && !isRed (h->right->left))
             h = moveRedRight (h);
         if (st->compareTo (h->key, key) == 0) {
-            Node x = min (h->right);
+            Node *x = minNode (h->right);
             h->key = x->key;
             h->val = x->val;
             // h->val = get(h->right, min(h->right)->key);
             // h->key = min(h->right)->key;
-            h->right = deleteMin (h->right);
+            h->right = deleteMinNode (h->right);
         }
-        else h->right = delete (h->right, key);
+        else h->right = deleteNode (st, h->right, key);
     }
     return balance(h);
 }
@@ -389,7 +427,7 @@ void delete (RedBlackST st, const void *key) {
     if (isEmpty (st))
         ERROR (BST underflow);
 
-    if (!contains (key)) 
+    if (!contains (st, key)) 
         return;
 
     // if both children of root are black, set root to red
@@ -400,18 +438,6 @@ void delete (RedBlackST st, const void *key) {
     if (!isEmpty (st))
         st->root->color = BLACK;
         // assert check();
-}
-
-    // delete the key-value pair with the minimum key rooted at h
-Node* deleteMinNode (Node *h) { 
-    if (h->left == NULL)
-        return NULL;
-
-    if (!isRed (h->left) && !isRed (h->left->left))
-        h = moveRedLeft (h);
-
-    h->left = deleteMinNode (h->left);
-    return balance (h);
 }
 
 
@@ -426,27 +452,6 @@ Node* deleteMinNode (Node *h) {
  */
 Bool isEmpty (RedBlackST st) {
     return st->root == NULL;
-}
-
-/*------------------------------------------------------------*/
-/*
- * OPERAÃ‡Ã•ES PARA TABELAS DE SÃMBOLOS ORDENADAS: 
- * min(), max(), rank(), select(), deleteMin() e deleteMax().
- */
-
-/*-----------------------------------------------------------*/
-/*
- *  MIN(ST)
- * 
- *  RECEBE uma tabela de sÃ­mbolos ST e RETORNA uma cÃ³pia/clone
- *  da menor chave na tabela.
- *
- *  Se ST estÃ¡ vazia RETORNA NULL.
- *
- */
-void *min (RedBlackST st) {
-
-    return NULL;
 }
 
 
