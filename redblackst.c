@@ -266,7 +266,7 @@ Node *auxPut (RedBlackST st, Node *h, void *key, void *val) {
 
     printf(" %s\n", h->key);
     
-    int cmp = strCmp (h->key, key);
+    int cmp = st->compareTo (h->key, key);
     if      (cmp < 0) h->left  = auxPut (st, h->left,  key, val); 
     else if (cmp > 0) h->right = auxPut (st, h->right, key, val); 
     else              h->val   = (void *) val;
@@ -281,7 +281,7 @@ Node *auxPut (RedBlackST st, Node *h, void *key, void *val) {
 }    
 
 void put (RedBlackST st, const void *key, size_t sizeKey, const void *val, size_t sizeVal) {
-    printf("\n\nPUT %s\n\n", key);
+    printf("\nPUT %s\n\n", key);
     if (key == NULL) {
         ERROR ("KEY EH NULL");
         return;
@@ -291,10 +291,11 @@ void put (RedBlackST st, const void *key, size_t sizeKey, const void *val, size_
             //delete (st, key);
         return;
     }
-    void *copyKey = emalloc (sizeKey + 10);
+    void *copyKey = emalloc (sizeKey);
     memcpy (copyKey, key, sizeKey);
+    printf ("CopyKey: %s", copyKey);
 
-    void *copyVal = emalloc (sizeVal + 10);
+    void *copyVal = emalloc (sizeVal);
     memcpy (copyVal, val, sizeVal);
 
     st->root = auxPut (st, st->root, copyKey, copyVal);
