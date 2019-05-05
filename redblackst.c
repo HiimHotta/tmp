@@ -262,14 +262,14 @@ void freeST (RedBlackST st) {
 // insert the key-value pair in the subtree rooted at h
 Node *auxPut (RedBlackST st, Node *h, void *key, void *val) { 
     if (h == NULL) 
-        return newNode (key, val, RED, 1);
+        return newNode (key, val, RED);
 
     printf(" %s\n", h->key);
     
     int cmp = st->compareTo (h->key, key);
     if      (cmp < 0) h->left  = auxPut (st, h->left,  key, val); 
     else if (cmp > 0) h->right = auxPut (st, h->right, key, val); 
-    else              h->val   = (void *) val;
+    else              printf("hmmm\n"); //h->val   = val;
 /*
         // fix-up any right-leaning links
     if (isRed (h->right) && !isRed (h->left))      h = rotateLeft  (h);
@@ -293,7 +293,7 @@ void put (RedBlackST st, const void *key, size_t sizeKey, const void *val, size_
     }
     void *copyKey = emalloc (sizeKey);
     memcpy (copyKey, key, sizeKey);
-    printf ("CopyKey: %s", copyKey);
+    printf ("CopyKey: %s \n", copyKey);
 
     void *copyVal = emalloc (sizeVal);
     memcpy (copyVal, val, sizeVal);
