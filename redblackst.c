@@ -42,10 +42,12 @@ struct node {
 };
 
 //"construtor"
-Node *newNode (void *key, void *val, Bool color) {
+Node *newNode (const void *key, size_t sizeKey, const void *val, size_t sizeVal, Bool color) {
     Node *tmp = emalloc (sizeof (Node));
-    tmp->key = key;
-    tmp->val = val;
+    tmp->key = emalloc (sizeKey);
+    memcpy (tmp->key, key, sizeKey);
+    tmp->val = = emalloc (sizeVal);
+    memcpy (tmp->val, val, sizeVal);
     tmp->left = NULL;
     tmp->right = NULL;
     tmp->color = color;
@@ -262,12 +264,12 @@ void freeST (RedBlackST st) {
  */
 
 // insert the key-value pair in the subtree rooted at h
-Node *auxPut (RedBlackST st, Node *h, void *key, void *val) { 
+Node *auxPut (RedBlackST st, Node *h, const void *key, size_t sizeKey, const void *val, size_t sizeVal) { 
     if (h == NULL) 
-        return newNode (key, val, RED);
+        return newNode (key, sizeKey, val, sizeVal, RED);
 
     if (h->key == NULL) {
-        ERROR (AAAAHHH, H->KEY NULL);
+        ERROR (AAAAHHH H->KEY NULL);
     }
 
 
@@ -298,14 +300,8 @@ void put (RedBlackST st, const void *key, size_t sizeKey, const void *val, size_
             //delete (st, key);
         return;
     }
-    void *copyKey = emalloc (sizeKey);
-    memcpy (copyKey, key, sizeKey);
-    printf ("CopyKey: %s \n", copyKey);
 
-    void *copyVal = emalloc (sizeVal);
-    memcpy (copyVal, val, sizeVal);
-
-    st->root = auxPut (st, st->root, copyKey, copyVal);
+    st->root = auxPut (st, st->root, key, sizeKey, val, sizeVal);
     st->root->color = BLACK;
         // assert check();
 }
@@ -357,6 +353,54 @@ Bool contains (RedBlackST st, const void *key) {
  *
  */
 
+// delete the key-value pair with the given key rooted at h
+Node deleteNode (RedBlackST st, Node h, Key key) { 
+    // assert get(h, key) != NULL;
+    if (st->compareTo (h->key, key ) < 0)  {
+        if (!isRed (h->left) && !isRed (h->left->left))
+            h = moveRedLeft (h);
+        h->left = delete (h->left, key);
+    }
+
+    else {
+        if (isRed (h->left))
+            h = rotateRight (h);
+        if (st->compareTo (h->key, key) == 0 && (h->right == NULL))
+            return NULL;
+        if (!isRed (h->right) && !isRed (h->right->left))
+            h = moveRedRight (h);
+        if (st->compareTo (h->key, key) == 0) {
+            Node x = min (h->right);
+            h->key = x->key;
+            h->val = x->val;
+            // h->val = get(h->right, min(h->right)->key);
+            // h->key = min(h->right)->key;
+            h->right = deleteMin (h->right);
+        }
+        else h->right = delete (h->right, key);
+    }
+    return balance(h);
+}
+
+void delete (RedBlackST st, const void *key) {
+    if (key == NULL) 
+        ERROR (Delete com KEY NULL);
+
+    if (isEmpty (st))
+        ERROR (BST underflow);
+
+    if (!contains (key)) 
+        return;
+
+    // if both children of root are black, set root to red
+    if (!isRed (st->root->left) && !isRed (st->root->right))
+        st->root->color = RED;
+
+    st->root = deleteNode (st, st->root, key);
+    if (!isEmpty (st))
+        st->root->color = BLACK;
+        // assert check();
+}
 
     // delete the key-value pair with the minimum key rooted at h
 Node* deleteMinNode (Node *h) { 
@@ -370,20 +414,6 @@ Node* deleteMinNode (Node *h) {
     return balance (h);
 }
 
-
-void delete (RedBlackST st, const void *key) {
-    if (isEmpty (st))
-        ERROR (BST underflow);
-
-        // if both children of root are black, set root to red
-    if (!isRed (st->root->left) && !isRed (st->root->right))
-        st->root->color = RED;
-
-    st->root = deleteMinNode (st->root);
-    if (!isEmpty (st))
-        st->root->color = BLACK;
-        // assert check();
-}
 
 /*-----------------------------------------------------------*/
 /* 
