@@ -55,6 +55,12 @@ Node *newNode (const void *key, size_t sizeKey, const void *val, size_t sizeVal,
     return tmp;
 }
 
+void editVal (Node *node, const void *val, size_t sizeVal) {
+    free (Node->val);
+    node->val = emalloc (sizeVal);
+    memcpy (node->val, val, sizeVal);    
+}
+
 /*----------------------------------------------------------*/
 /* 
  * Estrutura BÃ¡sica da Tabela de SÃ­mbolos: 
@@ -316,7 +322,7 @@ Node *auxPut (RedBlackST st, Node *h, const void *key, size_t sizeKey, const voi
     int cmp = st->compareTo (h->key, key);
     if      (cmp < 0) h->left  = auxPut (st, h->left,  key, sizeKey, val, sizeVal); 
     else if (cmp > 0) h->right = auxPut (st, h->right, key, sizeKey, val, sizeVal); 
-    else              memcpy (h->val, val sizeVal);
+    else              editVal (h, val, sizeVal);
 /*
         // fix-up any right-leaning links
     if (isRed (h->right) && !isRed (h->left))      h = rotateLeft  (h);
