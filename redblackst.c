@@ -56,7 +56,7 @@ Node *newNode (const void *key, size_t sizeKey, const void *val, size_t sizeVal,
 }
 
 void editVal (Node *node, const void *val, size_t sizeVal) {
-    free (Node->val);
+    free (node->val);
     node->val = emalloc (sizeVal);
     memcpy (node->val, val, sizeVal);    
 }
@@ -322,7 +322,7 @@ Node *auxPut (RedBlackST st, Node *h, const void *key, size_t sizeKey, const voi
     int cmp = st->compareTo (h->key, key);
     if      (cmp < 0) h->left  = auxPut (st, h->left,  key, sizeKey, val, sizeVal); 
     else if (cmp > 0) h->right = auxPut (st, h->right, key, sizeKey, val, sizeVal); 
-    else              editVal (h, val, sizeVal);
+    else              h->(val) = val; 
 /*
         // fix-up any right-leaning links
     if (isRed (h->right) && !isRed (h->left))      h = rotateLeft  (h);
