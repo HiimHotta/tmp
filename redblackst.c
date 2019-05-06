@@ -428,16 +428,6 @@ int rank (RedBlackST st, const void *key) {
  *  Se ST nÃ£o tem K+1 elementos RETORNA NULL.
  *
  */
-void *select (RedBlackST st, int k) {
-    if (k < 0)
-        ERROR (K < 0 EM SELECT);
-
-    if (k >= size (st)) 
-        return NULL;
-
-    Node *x = selectNode (st->root, k);
-    return getKey (x);
-}
 
 // the key of rank k in the subtree rooted at x
 Node *selectNode (Node *x, int k) {
@@ -448,6 +438,17 @@ Node *selectNode (Node *x, int k) {
     else if (t < k) return selectNode (x->right, k - t - 1); 
     else            return x; 
 } 
+
+void *select (RedBlackST st, int k) {
+    if (k < 0)
+        ERROR (K < 0 EM SELECT);
+
+    if (k >= size (st)) 
+        return NULL;
+
+    Node *x = selectNode (st->root, k);
+    return getKey (x);
+}
 
 /*-----------------------------------------------------------*/
 /*
