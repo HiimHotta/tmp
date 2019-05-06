@@ -28,7 +28,7 @@
 
 /*----------------------------------------------------------*/
 /* 
- * Estrutura de um nÃ³ da Ã¡rvore
+ * Estrutura de um noh da Arvore
  *
  */
 typedef struct node Node;
@@ -62,6 +62,10 @@ void editVal (Node *node, const void *val, size_t sizeVal) {
     memcpy (tmp, val, sizeVal);
     node->val = tmp;
 }
+
+//FIM NOH
+
+
 
 /*----------------------------------------------------------*/
 /* 
@@ -252,12 +256,16 @@ static Node *balance(Node *h) {
  *
  */
 void *min (RedBlackST st) {
-
-    return NULL;
+    if (st->root == NULL)
+      return NULL;
+    return minNode (st->root)->key;
 }
 
-void *minNode (Node *node) {
-    return NULL;
+Node *minNode (Node *node) {
+    // assert x != null;
+    if (x->left == NULL) 
+        return x; 
+    return min (x.left); 
 }
 
 // delete the key-value pair with the minimum key rooted at h
