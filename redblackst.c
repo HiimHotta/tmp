@@ -317,7 +317,7 @@ void deleteMin (RedBlackST st) {
     if (!isRed (st->root->left) && !isRed (st->root->right))
         st->root->color = RED;
 
-    root = deleteMinNode (st->root);
+    st->root = deleteMinNode (st->root);
 
     if (!isEmpty (st))
         st->root->color = BLACK;
@@ -384,7 +384,8 @@ void deleteMax (RedBlackST st) {
     if (!isRed (st->root->left) && !isRed (st->root->right))
         st->root->color = RED;
 
-    root = deleteMaxNode (st->root);
+    ST->root = deleteMaxNode (st->root);
+    
     if (!isEmpty (st)) 
         st->root->color = BLACK;
     // assert check();
