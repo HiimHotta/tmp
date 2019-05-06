@@ -243,7 +243,7 @@ void *getKey (Node *node) {
 
 /*------------------------------------------------------------*/
 /*
- * OPERAÃ‡Ã•ES PARA TABELAS DE SÃMBOLOS ORDENADAS: 
+ * OPERAÃ‡Ã•ES PARA TABELAS DE SÃMBOLOS ORDENADAS: isEmpty
  * min(), max(), rank(), select(), deleteMin() e deleteMax().
  */
 
@@ -258,15 +258,30 @@ void *getKey (Node *node) {
  *
  */
 
+
+/*-----------------------------------------------------------*/
+/* 
+ *  ISEMPTY(ST, KEY)
+ *
+ *  RECEBE uma tabela de sÃ­mbolos ST.
+ * 
+ *  RETORNA TRUE se ST estÃ¡ vazia e FALSE em caso contrÃ¡rio.
+ *
+ */
+Bool isEmpty (RedBlackST st) {
+    return st->root == NULL;
+}
+
+
 Node *minNode (Node *node) {
-    // assert x != null;
+    // assert node != null;
     if (node->left == NULL) 
         return node; 
     return minNode (node->left); 
 }
 
 void *min (RedBlackST st) {
-    if (st->root == NULL)
+    if (isEmpty (st))
       return NULL;
     return getKey (minNode (st->root));
 }
@@ -282,6 +297,33 @@ Node* deleteMinNode (Node *h) {
     h->left = deleteMinNode (h->left);
     return balance (h);
 }
+
+
+/*-----------------------------------------------------------*/
+/*
+ *  MAX(ST)
+ * 
+ *  RECEBE uma tabela de sÃ­mbolos ST e RETORNA uma cÃ³pia/clone
+ *  da maior chave na tabela.
+ *
+ *  Se ST estÃ¡ vazia RETORNA NULL.
+ *
+ */
+
+// the largest key in the subtree rooted at x; null if no such key
+Node *maxNode (Node *x) { 
+    // assert x != null;
+    if (x->right == NULL)
+        return x; 
+    return maxNode (x->right); 
+} 
+
+void *max (RedBlackST st) {
+    if (isEmpty(st))
+        return NULL;
+    return getKey (maxNode (st->root));
+} 
+
 
 /*-----------------------------------------------------------*/
 /*
@@ -456,35 +498,6 @@ void delete (RedBlackST st, const void *key) {
     if (!isEmpty (st))
         st->root->color = BLACK;
         // assert check();
-}
-
-
-/*-----------------------------------------------------------*/
-/* 
- *  ISEMPTY(ST, KEY)
- *
- *  RECEBE uma tabela de sÃ­mbolos ST.
- * 
- *  RETORNA TRUE se ST estÃ¡ vazia e FALSE em caso contrÃ¡rio.
- *
- */
-Bool isEmpty (RedBlackST st) {
-    return st->root == NULL;
-}
-
-
-/*-----------------------------------------------------------*/
-/*
- *  MAX(ST)
- * 
- *  RECEBE uma tabela de sÃ­mbolos ST e RETORNA uma cÃ³pia/clone
- *  da maior chave na tabela.
- *
- *  Se ST estÃ¡ vazia RETORNA NULL.
- *
- */
-void *max (RedBlackST st) {
-    return NULL;
 }
 
 
