@@ -237,7 +237,9 @@ static Node *balance(Node *h) {
     return h;
 }
 
-
+void *getKey (Node *node) {
+    return node->key;
+}
 
 /*------------------------------------------------------------*/
 /*
@@ -258,14 +260,14 @@ static Node *balance(Node *h) {
 void *min (RedBlackST st) {
     if (st->root == NULL)
       return NULL;
-    return minNode (st->root)->key;
+    return getKey (minNode (st->root));
 }
 
 Node *minNode (Node *node) {
     // assert x != null;
-    if (x->left == NULL) 
-        return x; 
-    return min (x.left); 
+    if (node->left == NULL) 
+        return node; 
+    return minNode (node->left); 
 }
 
 // delete the key-value pair with the minimum key rooted at h
