@@ -330,7 +330,7 @@ Node *auxPut (RedBlackST st, Node *h, const void *key, size_t sizeKey, const voi
         ERROR (AAAAHHH H->KEY NULL);
     }
     
-    int cmp = st->compareTo (h->key, key);
+    int cmp = st->compareTo (key, h->key);
     if      (cmp < 0) h->left  = auxPut (st, h->left,  key, sizeKey, val, sizeVal); 
     else if (cmp > 0) h->right = auxPut (st, h->right, key, sizeKey, val, sizeVal); 
     else              editVal (h, val, sizeVal);
@@ -625,11 +625,11 @@ Bool check (RedBlackST st) {
 Bool isBSTNode (RedBlackST st, Node *x, void *min, void *max) {
     if (x == NULL) 
         return TRUE;
-    if (min != NULL && st->compareTo (x->min, min) <= 0)
+    if (min != NULL && st->compareTo (min, x->key) <= 0)
         return FALSE;
-    if (max != NULL && st->compareTo (x->max, max) >= 0) 
+    if (max != NULL && st->compareTo (max, x->key) >= 0) 
         return FALSE;
-    return isBSTNode (x->left, min, x->key) && isBSTNode (x->right, x->key, max);
+    return isBSTNode (st, x->left, min, x->key) && isBSTNode (st, x->right, x->key, max);
 } 
 
 static Bool isBST (RedBlackST st) {
