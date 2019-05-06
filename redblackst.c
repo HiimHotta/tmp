@@ -337,16 +337,16 @@ void *max (RedBlackST st) {
 int rank (RedBlackST st, const void *key) {
     if (key == null) 
         ERRO (KEY NULL);
-    return rank (st, key, st->root);
+    return rankNode (st, key, st->root);
 } 
 
 // number of keys less than key in the subtree rooted at x
-int rank(RedBlackST st, const void *key, Node *x) {
+int rankNode (RedBlackST st, const void *key, Node *x) {
     if (x == NULL)
         return 0; 
-    int cmp = st->compareTo (x.key); 
-    if      (cmp < 0) return rank (st, key, x->left); 
-    else if (cmp > 0) return 1 + sizeNode (x->left) + rank (st, key, x->right); 
+    int cmp = st->compareTo (x->key); 
+    if      (cmp < 0) return rankNode (st, key, x->left); 
+    else if (cmp > 0) return 1 + sizeNode (x->left) + rankNode (st, key, x->right); 
     else              return sizeNode (x->left); 
 } 
 
