@@ -241,6 +241,19 @@ void *getKey (Node *node) {
     return node->key;
 }
 
+/*-----------------------------------------------------------*/
+/* 
+ *  ISEMPTY(ST, KEY)
+ *
+ *  RECEBE uma tabela de sÃ­mbolos ST.
+ * 
+ *  RETORNA TRUE se ST estÃ¡ vazia e FALSE em caso contrÃ¡rio.
+ *
+ */
+Bool isEmpty (RedBlackST st) {
+    return st->root == NULL;
+}
+
 /*------------------------------------------------------------*/
 /*
  * OPERAÃ‡Ã•ES PARA TABELAS DE SÃMBOLOS ORDENADAS: isEmpty
@@ -257,20 +270,6 @@ void *getKey (Node *node) {
  *  Se ST estÃ¡ vazia RETORNA NULL.
  *
  */
-
-
-/*-----------------------------------------------------------*/
-/* 
- *  ISEMPTY(ST, KEY)
- *
- *  RECEBE uma tabela de sÃ­mbolos ST.
- * 
- *  RETORNA TRUE se ST estÃ¡ vazia e FALSE em caso contrÃ¡rio.
- *
- */
-Bool isEmpty (RedBlackST st) {
-    return st->root == NULL;
-}
 
 
 Node *minNode (Node *node) {
@@ -324,6 +323,32 @@ void *max (RedBlackST st) {
     return getKey (maxNode (st->root));
 } 
 
+
+/*-----------------------------------------------------------*/
+/*
+ *  RANK(ST, KEY)
+ * 
+ *  RECEBE uma tabela de sÃ­mbolos ST e uma chave KEY.
+ *  RETORNA o nÃºmero de chaves em ST menores que KEY.
+ *
+ *  Se ST estÃ¡ vazia RETORNA 0.
+ *
+ */
+int rank (RedBlackST st, const void *key) {
+    if (key == null) 
+        ERRO (KEY NULL);
+    return rank (st, key, st->root);
+} 
+
+// number of keys less than key in the subtree rooted at x
+int rank(RedBlackST st, const void *key, Node *x) {
+    if (x == NULL)
+        return 0; 
+    int cmp = st->compareTo (x.key); 
+    if      (cmp < 0) return rank (st, key, x->left); 
+    else if (cmp > 0) return 1 + sizeNode (x->left) + rank (st, key, x->right); 
+    else              return sizeNode (x->left); 
+} 
 
 /*-----------------------------------------------------------*/
 /*
@@ -499,22 +524,6 @@ void delete (RedBlackST st, const void *key) {
         st->root->color = BLACK;
         // assert check();
 }
-
-
-/*-----------------------------------------------------------*/
-/*
- *  RANK(ST, KEY)
- * 
- *  RECEBE uma tabela de sÃ­mbolos ST e uma chave KEY.
- *  RETORNA o nÃºmero de chaves em ST menores que KEY.
- *
- *  Se ST estÃ¡ vazia RETORNA NULL.
- *
- */
-int rank (RedBlackST st, const void *key) {
-    return 0;
-} 
-
 
 /*-----------------------------------------------------------*/
 /*
