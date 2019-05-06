@@ -155,7 +155,7 @@ int sizeNode (Node *node) {
     return node->size;
 }
 
-// is node x red; false if x is null
+// is node x red; false if x is NULL
 static Bool isRed (Node *node) {
     if (node == NULL)
         return FALSE;
@@ -164,7 +164,7 @@ static Bool isRed (Node *node) {
 
 // make a left-leaning link lean to the right
 static Node *rotateRight (Node *h) {
-    // assert (h != null) && isRed(h->left);
+    // assert (h != NULL) && isRed(h->left);
     Node *x = h->left;
     h->left = x->right;
     x->right = h;
@@ -177,7 +177,7 @@ static Node *rotateRight (Node *h) {
 
 // make a right-leaning link lean to the left
 static Node *rotateLeft (Node *h) {
-    // assert (h != null) && isRed(h->right);
+    // assert (h != NULL) && isRed(h->right);
     Node *x = h->right;
     h->right = x->left;
     x->left = h;
@@ -191,7 +191,7 @@ static Node *rotateLeft (Node *h) {
 // flip the colors of a node and its two children
 static void flipColors (Node *h) {
     // h must have opposite color of its two children
-    // assert (h != null) && (h->left != null) && (h->right != null);
+    // assert (h != NULL) && (h->left != NULL) && (h->right != NULL);
     // assert (!isRed(h) &&  isRed(h->left) &&  isRed(h->right))
     //    || (isRed(h)  && !isRed(h->left) && !isRed(h->right));
     h->color = !h->color;
@@ -202,7 +202,7 @@ static void flipColors (Node *h) {
 // Assuming that h is red and both h->left and h->left->left
 // are black, make h->left or one of its children red->
 static Node *moveRedLeft (Node *h) {
-    // assert (h != null);
+    // assert (h != NULL);
     // assert isRed(h) && !isRed(h->left) && !isRed(h->left->left);
     flipColors (h);
     if (isRed (h->right->left)) { 
@@ -216,7 +216,7 @@ static Node *moveRedLeft (Node *h) {
     // Assuming that h is red and both h->right and h->right->left
     // are black, make h->right or one of its children red->
 static Node *moveRedRight(Node *h) {
-    // assert (h != null);
+    // assert (h != NULL);
     // assert isRed(h) && !isRed(h->right) && !isRed(h->right->left);
     flipColors (h);
     if (isRed (h->left->left)) { 
@@ -228,7 +228,7 @@ static Node *moveRedRight(Node *h) {
 
 // restore red-black tree invariant
 static Node *balance(Node *h) {
-    // assert (h != null);
+    // assert (h != NULL);
     if (isRed (h->right))                         h = rotateLeft (h);
     if (isRed (h->left) && isRed (h->left->left)) h = rotateRight (h);
     if (isRed (h->left) && isRed (h->right))      flipColors (h);
@@ -273,7 +273,7 @@ Bool isEmpty (RedBlackST st) {
 
 
 Node *minNode (Node *node) {
-    // assert node != null;
+    // assert node != NULL;
     if (node->left == NULL) 
         return node; 
     return minNode (node->left); 
@@ -285,6 +285,18 @@ void *min (RedBlackST st) {
     return getKey (minNode (st->root));
 }
 
+/*-----------------------------------------------------------*/
+/*
+ *  deleteMIN(ST)
+ * 
+ *  RECEBE uma tabela de sÃ­mbolos ST e remove a entrada correspondente
+ *  Ã  menor chave.
+ *
+ *  Se ST estÃ¡ vazia, faz nada.
+ *
+ */
+
+// delete the key-value pair with the minimum key rooted at h
 // delete the key-value pair with the minimum key rooted at h
 Node* deleteMinNode (Node *h) { 
     if (h->left == NULL)
@@ -297,6 +309,20 @@ Node* deleteMinNode (Node *h) {
     return balance (h);
 }
 
+void deleteMin (RedBlackST st) {
+    if (isEmpty (st))
+        return;
+
+    // if both children of root are black, set root to red
+    if (!isRed(root->left) && !isRed(root->right))
+        root->color = RED;
+
+    root = deleteMinNode (st->root);
+
+    if (!isEmpty (st))
+        root->color = BLACK;
+    // assert check();
+}
 
 /*-----------------------------------------------------------*/
 /*
@@ -309,9 +335,9 @@ Node* deleteMinNode (Node *h) {
  *
  */
 
-// the largest key in the subtree rooted at x; null if no such key
+// the largest key in the subtree rooted at x; NULL if no such key
 Node *maxNode (Node *x) { 
-    // assert x != null;
+    // assert x != NULL;
     if (x->right == NULL)
         return x; 
     return maxNode (x->right); 
@@ -323,6 +349,45 @@ void *max (RedBlackST st) {
     return getKey (maxNode (st->root));
 } 
 
+/*-----------------------------------------------------------*/
+/*
+ *  deleteMAX(ST)
+ * 
+ *  RECEBE uma tabela de sÃ­mbolos ST e remove a entrada correspondente
+ *  Ã  maior chave.
+ *
+ *  Se ST estÃ¡ vazia, faz nada.
+ *
+ */
+
+// delete the key-value pair with the maximum key rooted at h
+Node *deleteMaxNode (Node *h) { 
+    if (isRed (h->left))
+        h = rotateRight (h);
+
+    if (h->right == NULL)
+        return NULL;
+
+    if (!isRed (h->right) && !isRed (h->right->left))
+        h = moveRedRight (h);
+
+    h->right = deleteMaxNode (h->right);
+
+    return balance (h);
+}
+
+void deleteMax (RedBlackST st) {
+    if (isEmpty (st))
+        return;
+
+    // if both children of root are black, set root to red
+    if (!isRed (root->left) && !isRed (root->right))
+        root->color = RED;
+
+    root = deleteMaxNode (st->root);
+    if (!isEmpty (st)) root->color = BLACK;
+    // assert check();
+}
 
 /*-----------------------------------------------------------*/
 /*
@@ -346,7 +411,7 @@ int rankNode (RedBlackST st, const void *key, Node *x) {
 } 
 
 int rank (RedBlackST st, const void *key) {
-    if (key == null) 
+    if (key == NULL) 
         ERROR (KEY NULL);
     return rankNode (st, key, st->root);
 } 
@@ -542,37 +607,6 @@ void *select (RedBlackST st, int k) {
 
 
 /*-----------------------------------------------------------*/
-/*
- *  deleteMIN(ST)
- * 
- *  RECEBE uma tabela de sÃ­mbolos ST e remove a entrada correspondente
- *  Ã  menor chave.
- *
- *  Se ST estÃ¡ vazia, faz nada.
- *
- */
-void deleteMin (RedBlackST st) {
-    if (st->root == NULL)
-        return;
-
-}
-
-
-/*-----------------------------------------------------------*/
-/*
- *  deleteMAX(ST)
- * 
- *  RECEBE uma tabela de sÃ­mbolos ST e remove a entrada correspondente
- *  Ã  maior chave.
- *
- *  Se ST estÃ¡ vazia, faz nada.
- *
- */
-void deleteMax (RedBlackST st) {
-}
-
-
-/*-----------------------------------------------------------*/
 /* 
  *  KEYS(ST, INIT)
  * 
@@ -643,7 +677,7 @@ Bool check (RedBlackST st) {
  * 
  */
     // is the tree rooted at x a BST with all keys strictly between min and max
-    // (if min or max is null, treat as empty constraint)
+    // (if min or max is NULL, treat as empty constraint)
     // Credit: Bob Dondero's elegant solution
 Bool isBSTNode (RedBlackST st, Node *x, void *min, void *max) {
     if (x == NULL) 
