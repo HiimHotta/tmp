@@ -58,9 +58,9 @@ Node *newNode (const void *key, size_t sizeKey, const void *val, size_t sizeVal,
 }
 
 void editVal (Node *node, const void *val, size_t sizeVal) {
-    free (node->val);
-    node->val = emalloc (sizeVal);
-    memcpy (node->val, val, sizeVal);    
+    void *tmp = emalloc (sizeVal);
+    memcpy (tmp, val, sizeVal);
+    node->val = tmp;
 }
 
 /*----------------------------------------------------------*/
@@ -322,11 +322,7 @@ Node *auxPut (RedBlackST st, Node *h, const void *key, size_t sizeKey, const voi
     int cmp = st->compareTo (h->key, key);
     if      (cmp < 0) h->left  = auxPut (st, h->left,  key, sizeKey, val, sizeVal); 
     else if (cmp > 0) h->right = auxPut (st, h->right, key, sizeKey, val, sizeVal); 
-    else {
-        h->val = (void*) val; 
-        int *aux = h->val;
-        printf ("\nFREQUENCIA: %d\n", *aux);
-    }
+    else              editVal (h, val, sizeVal);
 /*
         // fix-up any right-leaning links
     if (isRed (h->right) && !isRed (h->left))      h = rotateLeft  (h);
@@ -338,7 +334,7 @@ Node *auxPut (RedBlackST st, Node *h, const void *key, size_t sizeKey, const voi
 }    
 
 void put (RedBlackST st, const void *key, size_t sizeKey, const void *val, size_t sizeVal) {
-    printf("\nPUT %s\n\n", key);
+    //printf("\nPUT %s\n\n", key);
     if (key == NULL) {
         ERROR ("KEY EH NULL");
         return;
