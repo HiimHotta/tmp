@@ -257,7 +257,7 @@ Bool isEmpty (RedBlackST st) {
 /*------------------------------------------------------------*/
 /*
  * OPERAÃ‡Ã•ES PARA TABELAS DE SÃMBOLOS ORDENADAS: isEmpty
- * min(), max(), rank(), select(), deleteMin() e deleteMax().
+ * min(), deleteMin(), max(), deleteMax(), rank(), select().
  */
 
 /*-----------------------------------------------------------*/
@@ -384,8 +384,8 @@ void deleteMax (RedBlackST st) {
     if (!isRed (st->root->left) && !isRed (st->root->right))
         st->root->color = RED;
 
-    ST->root = deleteMaxNode (st->root);
-    
+    st->root = deleteMaxNode (st->root);
+
     if (!isEmpty (st)) 
         st->root->color = BLACK;
     // assert check();
@@ -416,6 +416,37 @@ int rank (RedBlackST st, const void *key) {
     if (key == NULL) 
         ERROR (KEY NULL);
     return rankNode (st, key, st->root);
+} 
+
+/*-----------------------------------------------------------*/
+/*
+ *  SELECT(ST, K)
+ * 
+ *  RECEBE uma tabela de sÃ­mbolos ST e um inteiro K >= 0.
+ *  RETORNA a (K+1)-Ã©sima menor chave da tabela ST.
+ *
+ *  Se ST nÃ£o tem K+1 elementos RETORNA NULL.
+ *
+ */
+void *select (RedBlackST st, int k) {
+    if (k < 0)
+        ERROR (K < 0 EM SELECT);
+
+    if (k >= size (st)) 
+        return NULL;
+
+    Node *x = selectNode (st->root, k);
+    return getKey (x);
+}
+
+// the key of rank k in the subtree rooted at x
+Node *selectNode (Node *x, int k) {
+    // assert x != null;
+    // assert k >= 0 && k < size(x);
+    int t = sizeNode (x->left); 
+    if      (t > k) return selectNode (x->left,  k); 
+    else if (t < k) return selectNode (x->right, k - t - 1); 
+    else            return x; 
 } 
 
 /*-----------------------------------------------------------*/
@@ -591,20 +622,6 @@ void delete (RedBlackST st, const void *key) {
     if (!isEmpty (st))
         st->root->color = BLACK;
         // assert check();
-}
-
-/*-----------------------------------------------------------*/
-/*
- *  SELECT(ST, K)
- * 
- *  RECEBE uma tabela de sÃ­mbolos ST e um inteiro K >= 0.
- *  RETORNA a (K+1)-Ã©sima menor chave da tabela ST.
- *
- *  Se ST nÃ£o tem K+1 elementos RETORNA NULL.
- *
- */
-void *select (RedBlackST st, int k) {
-    return NULL;
 }
 
 
