@@ -257,17 +257,18 @@ void *getKey (Node *node) {
  *  Se ST estÃ¡ vazia RETORNA NULL.
  *
  */
-void *min (RedBlackST st) {
-    if (st->root == NULL)
-      return NULL;
-    return getKey (minNode (st->root));
-}
 
 Node *minNode (Node *node) {
     // assert x != null;
     if (node->left == NULL) 
         return node; 
     return minNode (node->left); 
+}
+
+void *min (RedBlackST st) {
+    if (st->root == NULL)
+      return NULL;
+    return getKey (minNode (st->root));
 }
 
 // delete the key-value pair with the minimum key rooted at h
