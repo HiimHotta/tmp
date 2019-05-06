@@ -336,7 +336,7 @@ void *max (RedBlackST st) {
  */
 int rank (RedBlackST st, const void *key) {
     if (key == null) 
-        ERRO (KEY NULL);
+        ERROR (KEY NULL);
     return rankNode (st, key, st->root);
 } 
 
@@ -344,7 +344,7 @@ int rank (RedBlackST st, const void *key) {
 int rankNode (RedBlackST st, const void *key, Node *x) {
     if (x == NULL)
         return 0; 
-    int cmp = st->compareTo (x->key); 
+    int cmp = st->compareTo (key, x->key); 
     if      (cmp < 0) return rankNode (st, key, x->left); 
     else if (cmp > 0) return 1 + sizeNode (x->left) + rankNode (st, key, x->right); 
     else              return sizeNode (x->left); 
@@ -444,7 +444,7 @@ void put (RedBlackST st, const void *key, size_t sizeKey, const void *val, size_
 void *get (RedBlackST st, const void *key) {
     Node *n = st->root;
     while (n != NULL) {
-        int cmp = st->compareTo (n->key, key);
+        int cmp = st->compareTo (key, n->key);
         if      (cmp < 0) n = n->left;
         else if (cmp > 0) n = n->right;
         else              return n->val;
@@ -479,7 +479,7 @@ Bool contains (RedBlackST st, const void *key) {
 // delete the key-value pair with the given key rooted at h
 Node *deleteNode (RedBlackST st, Node *h, const void *key) { 
     // assert get(h, key) != NULL;
-    if (st->compareTo (h->key, key ) < 0)  {
+    if (st->compareTo (key, h->key) < 0)  {
         if (!isRed (h->left) && !isRed (h->left->left))
             h = moveRedLeft (h);
         h->left = deleteNode (st, h->left, key);
@@ -488,11 +488,11 @@ Node *deleteNode (RedBlackST st, Node *h, const void *key) {
     else {
         if (isRed (h->left))
             h = rotateRight (h);
-        if (st->compareTo (h->key, key) == 0 && (h->right == NULL))
+        if (st->compareTo (key, h->key) == 0 && (h->right == NULL))
             return NULL;
         if (!isRed (h->right) && !isRed (h->right->left))
             h = moveRedRight (h);
-        if (st->compareTo (h->key, key) == 0) {
+        if (st->compareTo (key, h->key) == 0) {
             Node *x = minNode (h->right);
             h->key = x->key;
             h->val = x->val;
