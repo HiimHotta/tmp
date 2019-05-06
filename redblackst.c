@@ -622,18 +622,18 @@ Bool check (RedBlackST st) {
     // is the tree rooted at x a BST with all keys strictly between min and max
     // (if min or max is null, treat as empty constraint)
     // Credit: Bob Dondero's elegant solution
-Bool isBST (RedBlackST st, Node *x, void *min, void *max) {
+Bool isBSTNode (RedBlackST st, Node *x, void *min, void *max) {
     if (x == NULL) 
         return TRUE;
     if (min != NULL && st->compareTo (x->min, min) <= 0)
         return FALSE;
     if (max != NULL && st->compareTo (x->max, max) >= 0) 
         return FALSE;
-    return isBST (x->left, min, x->key) && isBST (x->right, x->key, max);
+    return isBSTNode (x->left, min, x->key) && isBSTNode (x->right, x->key, max);
 } 
 
 static Bool isBST (RedBlackST st) {
-    return isBST (st, st->root, NULL, NULL);;
+    return isBSTNode (st, st->root, NULL, NULL);;
 }
 
 
