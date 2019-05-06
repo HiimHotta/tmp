@@ -46,8 +46,12 @@ Node *newNode (const void *key, size_t sizeKey, const void *val, size_t sizeVal,
     Node *tmp = emalloc (sizeof (Node));
     tmp->key = emalloc (sizeKey);
     memcpy (tmp->key, key, sizeKey);
+
     tmp->val = emalloc (sizeVal);
     memcpy (tmp->val, val, sizeVal);
+
+    printf ("\nFREQUENCIA: %d\n", tmp->val);
+
     tmp->left = NULL;
     tmp->right = NULL;
     tmp->color = color;
@@ -309,20 +313,18 @@ void freeST (RedBlackST st) {
 
 // insert the key-value pair in the subtree rooted at h
 Node *auxPut (RedBlackST st, Node *h, const void *key, size_t sizeKey, const void *val, size_t sizeVal) { 
-    if (h == NULL) 
+    if (h == NULL) {
         return newNode (key, sizeKey, val, sizeVal, RED);
+    }
 
     if (h->key == NULL) {
         ERROR (AAAAHHH H->KEY NULL);
     }
-
-
-    printf(" %s\n", h->key);
     
     int cmp = st->compareTo (h->key, key);
     if      (cmp < 0) h->left  = auxPut (st, h->left,  key, sizeKey, val, sizeVal); 
     else if (cmp > 0) h->right = auxPut (st, h->right, key, sizeKey, val, sizeVal); 
-    else              h->(val) = val; 
+    else              h->val = (void*) val; 
 /*
         // fix-up any right-leaning links
     if (isRed (h->right) && !isRed (h->left))      h = rotateLeft  (h);
@@ -341,6 +343,7 @@ void put (RedBlackST st, const void *key, size_t sizeKey, const void *val, size_
     }
 
     if (val == NULL) {
+        printf ("aaaaaaaah");
             //delete (st, key);
         return;
     }
