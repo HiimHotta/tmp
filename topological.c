@@ -69,8 +69,8 @@
 struct topological {
     Digraph DG;
     int* rank;
-    int *postOrder; //vector to show pre and post order
-    int iPost     ;
+    int *preorder, *postOrder; //vector to show pre and post order
+    int iPre     , iPost     ;
     Bag Cycle, Order;
 };
 
@@ -106,14 +106,14 @@ Bool check(Topological T) {
             last = v;
         }
         if (first != last) {
-            System.err.printf ("cycle begins with %d and ends with %d\n", first, last);
+            ERROR ("cycle begins with %d and ends with %d\n", first, last);
             return FALSE;
         }
     }
     return TRUE;
 }
 
-void dfs (Topological T, Bool* marked, Bool* onBag, int* edgeTo, int v) {
+void dfs (Topological T, Bool* marked, Bool* onStack, int* edgeTo, int v) {
     onStack[v] = TRUE;
     marked[v]  = TRUE;
     for (int w = adj (T->DG, v, TRUE); w != -1; w = adj (T->DG, v, FALSE)) {
@@ -125,7 +125,7 @@ void dfs (Topological T, Bool* marked, Bool* onBag, int* edgeTo, int v) {
         // found new vertex, so recur
         else if (!marked[w]) {
             edgeTo[w] = v;
-            dfs (G, marked, onBag, edgeTo, w);
+            dfs (G, marked, onStack, edgeTo, w);
         }
 
         // trace back directed cycle
@@ -143,17 +143,17 @@ void dfs (Topological T, Bool* marked, Bool* onBag, int* edgeTo, int v) {
 }
 
 Bool checkCycle (Topological T) {
-    Bool* marked = emalloc (vDigraph (T->DG) * sizeof (Bool));
-    Bool* onBag  = emalloc (vDigraph (T->DG) * sizeof (Bool));
-    int*  edgeTo = emalloc (vDigraph (T->DG) * sizeof (int));
+    Bool* marked  = emalloc (vDigraph (T->DG) * sizeof (Bool));
+    Bool* onStack = emalloc (vDigraph (T->DG) * sizeof (Bool));
+    int*  edgeTo  = emalloc (vDigraph (T->DG) * sizeof (int));
 
     for (int v = 0; v < vDigraph (T->DG); v++) {
         if (!marked[v] && cycle == NULL) 
-            dfs (T, marked, onBag, edgeTo, v);
+            dfs (T, marked, onStack, edgeTo, v);
     }
 
     free (marked);
-    free (onBag);
+    free (onStack);
     free (edgeTo);
 
     if (T->Cycle == NULL)
@@ -172,7 +172,7 @@ Bool checkOrder (Topological T) {
 
     for (int v = 0; v < vDigraph (T->DG); v++) {
         if (!marked[v])
-            dfso (G, v);
+            //dfso (G, v);
     }
 
 }
@@ -240,7 +240,7 @@ void freeTopological (Topological ts) {
  */
 Bool hasCycle (Topological ts) {
     validateTopological (ts);
-    return T->Cycle != NULL;
+    return ts->Cycle != NULL;
 }
 
 /*-----------------------------------------------------------*/
@@ -254,7 +254,7 @@ Bool hasCycle (Topological ts) {
  */
 Bool isDag (Topological ts) {
     validateTopological (ts);
-    return T->Order != NULL;
+    return ts->Order != NULL;
 }
 
 /*-----------------------------------------------------------*/
