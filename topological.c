@@ -68,7 +68,7 @@
  */
 struct topological {
     Digraph DG;
-    int* rank;
+    int* Rank;
     int *preorder, *postOrder; //vector to show pre and post order
     int iPre     , iPost     ;
     Bag Cycle, Order;
@@ -106,7 +106,7 @@ Bool check(Topological T) {
             last = v;
         }
         if (first != last) {
-            ERROR ("cycle begins with %d and ends with %d\n", first, last);
+            ERROR ("SOCORRO!!! CICLO NAO TERMINA NO MSM ELEMENTO!");
             return FALSE;
         }
     }
@@ -125,7 +125,7 @@ void dfs (Topological T, Bool* marked, Bool* onStack, int* edgeTo, int v) {
         // found new vertex, so recur
         else if (!marked[w]) {
             edgeTo[w] = v;
-            dfs (G, marked, onStack, edgeTo, w);
+            dfs (t->DG, marked, onStack, edgeTo, w);
         }
 
         // trace back directed cycle
@@ -148,7 +148,7 @@ Bool checkCycle (Topological T) {
     int*  edgeTo  = emalloc (vDigraph (T->DG) * sizeof (int));
 
     for (int v = 0; v < vDigraph (T->DG); v++) {
-        if (!marked[v] && cycle == NULL) 
+        if (!marked[v] && T->Cycle == NULL) 
             dfs (T, marked, onStack, edgeTo, v);
     }
 
@@ -172,6 +172,7 @@ Bool checkOrder (Topological T) {
 
     for (int v = 0; v < vDigraph (T->DG); v++) {
         if (!marked[v])
+            printf ();
             //dfso (G, v);
     }
 
@@ -194,16 +195,16 @@ Topological newTopological (Digraph G) {
 
     aux->DG         = G;
     if (checkCycle (aux)) {
-        aux->rank      = NULL;
+        aux->Rank      = NULL;
         aux->postOrder = NULL;
         return aux;
     }
     if (!checkOrder (aux)) {
-        aux->rank      = NULL;
+        aux->Rank      = NULL;
         aux->postOrder = NULL;
         return aux;
     }
-    aux->rank          = emalloc (vDigraph (G) * sizeof (int));
+    aux->Rank          = emalloc (vDigraph (G) * sizeof (int));
     aux->postOrder     = emalloc (vDigraph (G) * sizeof (int));
     return aux;
 }
@@ -218,7 +219,7 @@ Topological newTopological (Digraph G) {
  */
 void freeTopological (Topological ts) {
     validateTopological (ts);
-    free (rank);
+    free (Rank);
     free (postOrder);
     free (ts);
 }    
@@ -300,6 +301,10 @@ int post (Topological ts, vertex v) {
 int rank (Topological ts, vertex v) {
     validateTopological (ts);
     validateVertex (v);
+
+    if (isDag (ts)) 
+        return rank[v];
+    
     return -1;
 }
 
